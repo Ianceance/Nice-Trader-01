@@ -1,0 +1,194 @@
+
+#:import hex kivy.utils.get_color_from_hex
+<BlueButton@Button>:
+    background_normal: ''
+    background_color: hex('#2B8AF7')
+    color: 1,1,1,1
+    size_hint_y: None
+    height: '48dp'
+    font_size: '16sp'
+
+<LabelTitle@Label>:
+    font_size: '20sp'
+    size_hint_y: None
+    height: '36dp'
+    color: 0,0,0,1
+
+ScreenManager:
+    WelcomeScreen:
+    PinSetupScreen:
+    PinUnlockScreen:
+    MenuScreen:
+    DashboardScreen:
+    TradingNotesScreen:
+    MyTradesScreen:
+    SettingsScreen:
+
+<WelcomeScreen>:
+    name: 'welcome'
+    BoxLayout:
+        orientation: 'vertical'
+        padding: '20dp'
+        spacing: '12dp'
+        LabelTitle:
+            text: 'Nice Trader'
+        Label:
+            text: 'Welcome to Nice Trader. Securely track your trades and notes.'
+        BlueButton:
+            text: 'Get started'
+            on_release: root.check_pin()
+
+<PinSetupScreen>:
+    name: 'pin_setup'
+    BoxLayout:
+        orientation: 'vertical'
+        padding: '20dp'
+        spacing: '10dp'
+        LabelTitle:
+            text: 'Set your PIN'
+        Label:
+            text: 'Enter a 4-6 digit PIN to secure the app'
+        TextInput:
+            id: pin_input
+            hint_text: 'Enter PIN'
+            password: True
+            input_filter: 'int'
+            multiline: False
+        TextInput:
+            id: pin_confirm
+            hint_text: 'Confirm PIN'
+            password: True
+            input_filter: 'int'
+            multiline: False
+        BlueButton:
+            text: 'Set PIN'
+            on_release: root.set_pin(pin_input.text, pin_confirm.text)
+
+<PinUnlockScreen>:
+    name: 'pin_unlock'
+    BoxLayout:
+        orientation: 'vertical'
+        padding: '20dp'
+        spacing: '10dp'
+        LabelTitle:
+            text: 'Unlock Nice Trader'
+        Label:
+            text: 'Enter your PIN to continue'
+        TextInput:
+            id: unlock_pin
+            hint_text: 'PIN'
+            password: True
+            input_filter: 'int'
+            multiline: False
+        BlueButton:
+            text: 'Unlock'
+            on_release: root.unlock(unlock_pin.text)
+        Label:
+            id: unlock_msg
+            text: ''
+            color: 1,0,0,1
+
+<MenuScreen>:
+    name: 'menu'
+    BoxLayout:
+        orientation: 'vertical'
+        padding: '16dp'
+        spacing: '12dp'
+        LabelTitle:
+            text: 'Main Menu'
+        BlueButton:
+            text: 'Dashboard'
+            on_release: app.root.current = 'dashboard'
+        BlueButton:
+            text: 'Trading Notes'
+            on_release: app.root.current = 'trading_notes'
+        BlueButton:
+            text: 'My Trades'
+            on_release: app.root.current = 'my_trades'
+        BlueButton:
+            text: 'Settings'
+            on_release: app.root.current = 'settings'
+        Widget:
+
+<DashboardScreen>:
+    name: 'dashboard'
+    BoxLayout:
+        orientation: 'vertical'
+        padding: '16dp'
+        spacing: '12dp'
+        LabelTitle:
+            text: 'Dashboard'
+        Label:
+            text: 'Empty dashboard. Add trades and notes from the menu.'
+        BlueButton:
+            text: 'Back to Menu'
+            on_release: app.root.current = 'menu'
+
+<TradingNotesScreen>:
+    name: 'trading_notes'
+    BoxLayout:
+        orientation: 'vertical'
+        padding: '16dp'
+        spacing: '10dp'
+        LabelTitle:
+            text: 'Trading Notes'
+        Label:
+            text: 'No notes yet.'
+        BlueButton:
+            text: 'Back to Menu'
+            on_release: app.root.current = 'menu'
+
+<MyTradesScreen>:
+    name: 'my_trades'
+    BoxLayout:
+        orientation: 'vertical'
+        padding: '16dp'
+        spacing: '10dp'
+        LabelTitle:
+            text: 'My Trades'
+        Label:
+            text: 'No trades yet.'
+        BlueButton:
+            text: 'Back to Menu'
+            on_release: app.root.current = 'menu'
+
+<SettingsScreen>:
+    name: 'settings'
+    BoxLayout:
+        orientation: 'vertical'
+        padding: '16dp'
+        spacing: '10dp'
+        LabelTitle:
+            text: 'Settings'
+        Label:
+            text: 'Change PIN or toggle remember PIN'
+        BoxLayout:
+            size_hint_y: None
+            height: '40dp'
+            spacing: '8dp'
+            TextInput:
+                id: new_pin
+                hint_text: 'New PIN (4-6 digits)'
+                password: True
+                input_filter: 'int'
+                multiline: False
+            BlueButton:
+                size_hint_x: None
+                width: '110dp'
+                text: 'Change'
+                on_release: root.change_pin(new_pin.text)
+        BoxLayout:
+            size_hint_y: None
+            height: '40dp'
+            spacing: '8dp'
+            Label:
+                text: 'Remember PIN on this device:'
+                size_hint_x: 0.7
+            CheckBox:
+                id: remember_chk
+                active: root.get_remember_default()
+            BlueButton:
+                size_hint_x: None
+                width: '110dp'
+                text: 'Save'
+                on_release: root.save_remember(remember_chk.active)
